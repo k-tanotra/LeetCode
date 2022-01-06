@@ -11,21 +11,24 @@
  */
 class Solution {
 public:
-    void travel(TreeNode* root,vector<int> &ans,int k){
-        if(root==nullptr){
+    int c;
+    int ans;
+    
+    void travel(TreeNode* root,int k){
+        if(root==nullptr || ans!=-1){
             return;
         }
-        if(ans.size()==k){
-            return;
+        travel(root->left,k);
+        c = c+1;
+        if(c==k){
+            ans = root->val;
         }
-        travel(root->left,ans,k);
-        ans.push_back(root->val);
-        travel(root->right,ans,k);
-        return;
+        travel(root->right,k);
     }
     int kthSmallest(TreeNode* root, int k) {
-        vector<int> ans;
-        travel(root,ans,k);
-        return ans[k-1];
+        c = 0;
+        ans=-1;
+        travel(root,k);
+        return ans;
     }
 };
