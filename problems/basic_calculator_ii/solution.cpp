@@ -1,105 +1,73 @@
 class Solution {
 public:
-    int calculate(string s) {
-        vector<string> nums;
-        string ans = "";
+    vector<string> split(string s){
+        string temp;
+        vector<string> ans;
         for(int i=0;i<s.length();i++){
-            if(s[i]=='+' || s[i]=='-' || s[i]=='*' || s[i]=='/'){
-                nums.push_back(ans);
-                string x = "";
-                x+=s[i];
-                nums.push_back(x);
-                ans="";
+            if(s[i]>='0' && s[i]<='9'){
+                temp += s[i];
+            }
+            else if(s[i]==' '){
+                continue;
             }
             else{
-                ans += s[i];
+                if(temp.length()!=0){
+                    ans.push_back(temp);
+                    temp="";
+                }
+                temp+=s[i];
+                ans.push_back(temp);
+                temp ="";
             }
         }
-        if(ans.size()!=0){
-            nums.push_back(ans);
+        if(temp.length()!=0){
+            ans.push_back(temp);
         }
-         /*
-        for(int i=0;i<nums.size();i++){
-            cout<<nums[i]<<" ";
+        return ans;
+    }
+    int calculate(string s) {
+        vector<string> test = split(s);
+        /*
+        for(string t:test){
+            cout<<t;
         }
         */
-        
-        
-        
-        //division
-        //cout<<endl;
-        vector<string> n2;
-        for(int i=0;i<nums.size();i++){
-            //cout<<"**"<<nums[i]<<endl;
-            if(nums[i]=="/"){
-                int k = n2.size()-1;
-                n2[k] = to_string(stoi(n2[k])/stoi(nums[i+1]));
-                i++;
+        vector<string> div;
+        int last = -1;
+        for(int i=0;i<test.size();i++){
+            if(test[i]=="/"){
+                int x = stoi(div[last]);
+                int y = stoi(test[i+1]);
+                div[last] = to_string(x/y);
+                i=i+1;
             }
-            else if(nums[i]=="*"){
-                int k = n2.size()-1;
-                n2[k] = to_string(stoi(n2[k]) * stoi(nums[i+1]));
-                i++;
+            else if(test[i]=="*"){
+                int x = stoi(div[last]);
+                int y = stoi(test[i+1]);
+                div[last] = to_string(x*y);
+                i=i+1;
             }
             else{
-               n2.push_back(nums[i]); 
+                last++;
+                div.push_back(test[i]);
             }
         }
-        
-        cout<<endl;
-        for(int i=0;i<n2.size();i++){
-            cout<<n2[i]<<" ";
-        }
-        
-        
-        
-        //multiplication
         /*
-        nums=n2;
-        n2.clear();
-        for(int i=0;i<nums.size();i++){
-            if(nums[i]=="*"){
-                int k = n2.size()-1;
-                n2[k] = to_string(stoi(n2[k]) * stoi(nums[i+1]));
-                i++;
-            }
-            else{
-               n2.push_back(nums[i]); 
-            }
-        }
-    
-        cout<<endl;
-        for(int i=0;i<n2.size();i++){
-            cout<<n2[i]<<" ";
+        for(string d:div){
+            cout<<d<<" ";
         }*/
         
-        
-        //add subtract
-        nums=n2;
-        n2.clear();
-        for(int i=0;i<nums.size();i++){
-            if(nums[i]=="+"){
-                int k = n2.size()-1;
-                n2[k] = to_string(stoi(n2[k]) + stoi(nums[i+1]));
-                i++;
+        int ans = stoi(div[0]);
+        for(int i=1;i<div.size();i++){
+            if(div[i]=="+"){
+                ans+= stoi(div[i+1]);
+                i = i+1;
             }
-            else if(nums[i]=="-"){
-                int k = n2.size()-1;
-                n2[k] = to_string(stoi(n2[k]) - stoi(nums[i+1]));
-                i++;
-            }
-            else{
-               n2.push_back(nums[i]); 
+            else if(div[i]=="-"){
+                ans-= stoi(div[i+1]);
+                i = i+1;
             }
         }
-        /*
-        cout<<endl;
-        for(int i=0;i<n2.size();i++){
-            cout<<n2[i]<<" ";
-        }
-        */
-        
-        
-        return stoi(n2[0]);
+        return ans;
     }
 };
