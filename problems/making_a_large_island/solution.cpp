@@ -1,95 +1,87 @@
 class Solution {
 public:
-    struct point{
-        int x;
-        int y;
-    };
-    vector<vector<int>> v;
-    map<pair<int,int>,int> points;
-    unordered_map<int,int> colorArea;
-    bool canMove(pair<int,int> p){
-        if(p.first<0 || p.second<0 || p.first>=v.size() || p.second>=v[0].size()){
+    int n;
+    unordered_map<int,int> m;
+    bool canMove(int x,int y){
+        if(x<0 || x>=n || y<0 || y>=n){
             return false;
         }
         return true;
     }
-    void dfs(int color,int &area,pair<int,int> z){
-        ///cout<<"x--> "<<z.first<<" y--> "<<z.second<<" val--> "<<v[z.first][z.second]<<" Area-->"<<area<<endl;
-        points[z] = color;
-        pair<int,int> up = {z.first-1,z.second};
-        pair<int,int> down = {z.first+1,z.second};
-        pair<int,int> left = {z.first,z.second-1};
-        pair<int,int> right = {z.first,z.second+1};
-        area+=1;
-        if(canMove(up) && v[up.first][up.second]==1 && points.find(up)==points.end()){
-            dfs(color,area,up);
+    void dfs(int x,int y,int color,vector<vector<int>> &grid,int &size){
+        if(!canMove(x,y)){
+            return;
         }
-        if(canMove(down) && v[down.first][down.second]==1 && points.find(down)==points.end()){
-            dfs(color,area,down);
+        size++;
+        grid[x][y] = color;
+        if(canMove(x+1,y) && grid[x+1][y]==1){
+            dfs(x+1,y,color,grid,size);
         }
-        if(canMove(left) && v[left.first][left.second]==1 && points.find(left)==points.end()){
-            dfs(color,area,left);
+         if(canMove(x-1,y) && grid[x-1][y]==1){
+            dfs(x-1,y,color,grid,size);
         }
-        if(canMove(right) && v[right.first][right.second]==1 && points.find(right)==points.end()){
-            dfs(color,area,right);
+         if(canMove(x,y+1) && grid[x][y+1]==1){
+            dfs(x,y+1,color,grid,size);
+        }
+        if(canMove(x,y-1) && grid[x][y-1]==1){
+            dfs(x,y-1,color,grid,size);
         }
     }
-    void calArea(){
-        int color = 1;
-        for(int i=0;i<v.size();i++){
-            for(int j=0;j<v[i].size();j++){
-                pair<int,int> z = {i,j};
-                if(v[i][j]==1 && points.find(z)==points.end()){
-                    int area = 0;
-                    dfs(color,area,z);
-                    colorArea[color] = area;
+    int largestIsland(vector<vector<int>>& grid) {
+        int color = 2;
+        n = grid.size();
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(grid[i][j]==1){
+                    int size = 0;
+                    dfs(i,j,color,grid,size);
+                    m[color] = size;
                     color++;
                 }
             }
         }
-    }
-    int largestIsland(vector<vector<int>>& grid) {
-        v = grid;
-        calArea();
-        int ans = INT_MIN;
-       // cout<<endl;
-        
-        for(auto itr=colorArea.begin(); itr!=colorArea.end(); itr++){
-            //cout<<itr->first<<" "<<itr->second<<endl;
-            ans=max(ans,itr->second);
+        /*
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                cout<<grid[i][j]<<" ";
+            }
+            cout<<endl;
         }
         
-        for(int i=0;i<v.size();i++){
-            for(int j=0;j<v[i].size();j++){
-                if(v[i][j]==0){
-                    int temp = 0;
-                    pair<int,int> z = {i,j};
-                    set<int> col;
-                    pair<int,int> up = {z.first-1,z.second};
-                    pair<int,int> down = {z.first+1,z.second};
-                    pair<int,int> left = {z.first,z.second-1};
-                    pair<int,int> right = {z.first,z.second+1};
-                    if(points.find(up)!=points.end() && col.find(points[up])==col.end()){
-                        temp+= colorArea[points[up]];
-                        col.insert(points[up]);
+        cout<<endl;
+        */
+        int ans = 0;
+        for(auto itr=m.begin();itr!=m.end();itr++){
+            ans = max(ans,itr->second);
+        }
+        
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(grid[i][j]==0){
+                    int cur = 0;
+                    unordered_set<int> st;
+                    if(canMove(i+1,j) && grid[i+1][j]>1 && st.find(grid[i+1][j])==st.end()){
+                            cur+=m[grid[i+1][j]];
+                            st.insert({grid[i+1][j]});
                     }
-                    if(points.find(down)!=points.end() && col.find(points[down])==col.end()){
-                        temp+= colorArea[points[down]];
-                        col.insert(points[down]);
+                    if(canMove(i-1,j) && grid[i-1][j]>1 && st.find(grid[i-1][j])==st.end()){
+                            cur+= m[grid[i-1][j]];
+                            st.insert({grid[i-1][j]});
                     }
-                    if(points.find(right)!=points.end() && col.find(points[right])==col.end()){
-                        temp+= colorArea[points[right]];
-                        col.insert(points[right]);
+                     if(canMove(i,j+1) && grid[i][j+1]>1 && st.find(grid[i][j+1])==st.end()){
+                            cur+= m[grid[i][j+1]];
+                            st.insert({grid[i][j+1]});
                     }
-                    if(points.find(left)!=points.end() && col.find(points[left])==col.end()){
-                        temp+= colorArea[points[left]];
-                        col.insert(points[left]);
+                    if(canMove(i,j-1) && grid[i][j-1]>1 && st.find(grid[i][j-1])==st.end()){
+                            cur+= m[grid[i][j-1]];
+                            st.insert({grid[i][j-1]});
                     }
                     
-                    ans = max(ans,temp+1);
+                    ans = max(ans,cur+1);
                 }
             }
         }
+        
         return ans;
     }
 };
