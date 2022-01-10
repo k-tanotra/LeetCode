@@ -1,51 +1,55 @@
 class Solution {
 public:
-    vector<string> customSplit(string path){
+    vector<string> split(string s){
         string temp = "";
         vector<string> ans;
-        for(int i=0;i<path.length();i++){
-            
-            if(path[i]=='/' && temp.empty()){
-                continue;
-            }
-            else if(path[i]=='/' && !temp.empty()){
-                if(temp==".."){
-                    if(ans.size()>0){
-                        ans.erase(ans.end() - 1);
-                    }
-                }
-                else if(temp!="."){
+        for(int i=0;i<s.length();i++){
+            if(s[i]=='/'){
+                if(temp!="")
                     ans.push_back(temp);
-                }
                 temp="";
             }
             else{
-                temp += path[i];
+                temp +=s[i];
             }
         }
-        
-        if(!temp.empty()){
-            if(temp==".."){
-                if(ans.size()>0){
-                    ans.erase(ans.end() - 1);
-                }
-            }
-            else if(temp!="."){
-                ans.push_back(temp);
-            }
-            temp="";
+        if(temp!=""){
+            ans.push_back(temp);
         }
         return ans;
     }
+    void print(vector<string> r){
+        for(int i=0;i<r.size();i++){
+            cout<<r[i]<<" ";
+        }
+        cout<<endl;
+    }
     string simplifyPath(string path) {
-        vector<string> v = customSplit(path);
-        string ans = "/";
-        for(int i=0;i<v.size();i++){
-            ans += v[i] + "/";
+        vector<string> res = split(path);
+        
+       // print(res);
+        stack<string> st;
+        for(int i=0;i<res.size();i++){
+            if(res[i]=="."){
+                continue;
+            }
+            else if(res[i]==".."){
+                if(!st.empty()){
+                    st.pop();
+                }
+            }
+            else{
+                st.push(res[i]);
+            }
+            
         }
-        if(ans.size()>0 && ans!="/"){
-            ans.erase(ans.end() - 1);
+        string ans = "";
+        while(!st.empty()){
+            ans = "/" + st.top() + ans;
+            st.pop();
         }
+        if(ans=="")
+            return "/";
         return ans;
     }
 };
