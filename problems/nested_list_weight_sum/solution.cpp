@@ -29,19 +29,19 @@
  */
 class Solution {
 public:
-    void dfs(vector<NestedInteger>& nestedList,int d,int &ans){
-        for(int i=0;i<nestedList.size();i++){
-            if(nestedList[i].isInteger()){
-                ans += nestedList[i].getInteger()*d;
+    int sumList(vector<NestedInteger>& list,int depth){
+        int sum = 0;
+        for(int i=0;i<list.size();i++){
+            if(list[i].isInteger()){
+                sum += list[i].getInteger()*depth;
             }
             else{
-                dfs(nestedList[i].getList(),d+1,ans);
+                sum += sumList(list[i].getList(),depth+1);
             }
         }
+        return sum;
     }
     int depthSum(vector<NestedInteger>& nestedList) {
-        int ans = 0;
-        dfs(nestedList,1,ans);
-        return ans;
+        return sumList(nestedList,1);
     }
 };
