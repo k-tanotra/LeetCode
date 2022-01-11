@@ -11,22 +11,21 @@
  */
 class Solution {
 public:
-    void travel(TreeNode* root,int low,int high,int &sum){
-        if(root==nullptr){
+    void travel(TreeNode* root, int low, int high,int &sum){
+        if(!root){
+            //cout<<root->val<<" ji "<<endl;
             return;
         }
-        if(root->val>high){
-            return travel(root->left,low,high,sum);
-        }
-        else if(root->val<low){
-            return travel(root->right,low,high,sum);
-        }
-        //cout<<root->val<<endl;
         if(root->val>=low && root->val<=high){
             sum += root->val;
         }
-        travel(root->left,low,high,sum);
-        travel(root->right,low,high,sum);
+        
+        if(root->val>low){
+            travel(root->left,low,high,sum);
+        }
+        if(root->val<high){
+            travel(root->right,low,high,sum);
+        }
     }
     int rangeSumBST(TreeNode* root, int low, int high) {
         int sum = 0;
