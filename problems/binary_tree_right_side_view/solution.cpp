@@ -11,31 +11,22 @@
  */
 class Solution {
 public:
+    
+    void travel(TreeNode* root,int depth,vector<int> &ans){
+        if(!root){
+            return;
+        }
+        if(ans.size()<depth){
+            ans.push_back(root->val);
+        }
+        travel(root->right,depth+1,ans);
+        travel(root->left,depth+1,ans);
+    }
     vector<int> rightSideView(TreeNode* root) {
-        vector<int> v;
-        if(root==nullptr){
-            return v;
-        }
-        queue<TreeNode*> q;
-        q.push(root);
+        //dfs
+        vector<int> ans;
+        travel(root,1,ans);
+        return ans;
         
-        while(!q.empty()){
-            int len = q.size();
-            int last;
-            while(len){
-                TreeNode* x = q.front();
-                q.pop();
-                last = x->val;
-                if(x->left!=nullptr){
-                    q.push(x->left);
-                }
-                if(x->right!=nullptr){
-                    q.push(x->right);
-                }
-                len--;
-            }
-            v.push_back(last);
-        }
-        return v;
     }
 };
