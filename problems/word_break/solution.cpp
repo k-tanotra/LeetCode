@@ -1,37 +1,32 @@
 class Solution {
 public:
-    set<string> m;
-    map<pair<int,string>,int> mp;
-    int check(string s,int idx,string ans,bool prev){
-        if(idx>=s.length() && prev){
-            return 1;
+    unordered_set<string> st;
+    vector<int> dp;
+    bool rec(string s,int idx,int n){
+        if(idx>=n){
+            return true;
         }
-        else if(idx>=s.length()){
-            return 0;
-            
-        }
-        ans += s[idx];
-        if(m.find(ans)!=m.end()){
+        if(dp[idx]==-1){
             string temp = "";
-            if(mp.find({idx,ans})==mp.end()){
-                mp.insert({make_pair(idx,ans),check(s,idx+1,temp,true) || check(s,idx+1,ans,false)});
+            for(int i=idx;i<n;i++){
+                temp +=s[i];
+                //cout<<temp<<endl;
+                if(st.find(temp)!=st.end() && rec(s,i+1,n)){
+                   dp[idx] = true;
+                   break;
+                }
             }
-            return mp[{idx,ans}];
-            // return  check(s,idx+1,temp,true) || check(s,idx+1,ans,false);
+            if(dp[idx]!=1)
+                dp[idx] = false;
         }
-        if(mp.find({idx,ans})==mp.end()){
-            mp.insert({{idx,ans},check(s,idx+1,ans,false)});
-        }
-        return mp[{idx,ans}];
-        // return check(s,idx+1,ans,false);
+        return dp[idx];
     }
     bool wordBreak(string s, vector<string>& wordDict) {
-        string ans = "";
-        m.clear();
-        int prev = false;
         for(int i=0;i<wordDict.size();i++){
-            m.insert(wordDict[i]);
+            st.insert({wordDict[i]});
         }
-        return check(s,0,ans,prev);
+        int n = s.length();
+        dp.resize(n,-1);
+        return rec(s,0,n);
     }
 };
