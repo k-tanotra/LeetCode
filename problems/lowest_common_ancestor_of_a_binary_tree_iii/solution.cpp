@@ -11,16 +11,33 @@ public:
 
 class Solution {
 public:
-    Node* lowestCommonAncestor(Node* p, Node * q) {
-       // int count = 0;
-        Node* a = p;
-        Node* b = q;
-        while(p!=q){
-            //count++;
-            p = p==nullptr? b:p->parent;
-            q = q==nullptr? a:q->parent;
+    int findDepth(Node* p){
+        int d = 0;
+        while(p){
+            d++;
+            p = p->parent;
         }
-      //  cout<<count;
+        return d-1 <0 ? 0 : d-1;
+    }
+    Node* lowestCommonAncestor(Node* p, Node * q) {
+       int x  = findDepth(p);
+       int y  = findDepth(q);
+        
+       while(x!=y){
+           if(x<y){
+              q=q->parent;
+              y--;
+           }
+           else{
+              p=p->parent;
+              x--;
+           }
+       }
+        
+        while(p!=q){
+            q = q->parent;
+            p = p->parent;
+        }
         return p;
     }
 };
