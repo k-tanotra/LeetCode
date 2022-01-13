@@ -1,23 +1,33 @@
 class SparseVector {
 public:
-    unordered_map<int,int> s;
+    vector<pair<int,int>> v;
     SparseVector(vector<int> &nums) {
         for(int i=0;i<nums.size();i++){
             if(nums[i]!=0){
-                s.insert({i,nums[i]});
+                v.push_back({i,nums[i]});
             }
         }
     }
     
     // Return the dotProduct of two sparse vectors
     int dotProduct(SparseVector& vec) {
-        //ctor<int> v2 = vec.num;
         int ans = 0;
-        for(auto itr=s.begin();itr!=s.end();itr++){
-            if(vec.s.find(itr->first)!=vec.s.end()){
-                ans+= itr->second * vec.s[itr->first];
+        int s1 = 0;
+        int s2 = 0;
+        while(s1<v.size() && s2<vec.v.size()){
+            if(v[s1].first==vec.v[s2].first){
+                ans+= v[s1].second * vec.v[s2].second;
+                s1++;
+                s2++;
+            }
+            else if(v[s1].first>vec.v[s2].first){
+                s2++;
+            }
+            else{
+                s1++;
             }
         }
+        
         return ans;
     }
 };
