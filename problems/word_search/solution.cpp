@@ -1,58 +1,58 @@
 class Solution {
 public:
-    bool dfs(vector<vector<char>>& board,vector<vector<bool>> &visited,string word,int idx,int row,int col,int x,int y){
-        // cout<<board[x][y]<<" "<<x<<" "<<y<<endl;
-        if(idx>word.length()){
+    int m;
+    int n;
+    bool canMove(int x,int y){
+        if(x<0 || x>=m || y<0 || y>=n){
             return false;
         }
+        return true;
+    }
+    bool dfs(int x,int y,vector<vector<char>>& board,string word,int idx){
+        ///cout<<cur<<" "<<x<<" "<<y<<endl;
         if(word[idx]!=board[x][y]){
             return false;
         }
-        if(idx==word.length()-1){
+        else if(idx==word.length()-1){
             return true;
         }
-        
-        visited[x][y]=true;
-        if(x-1>=0 && !visited[x-1][y]){
-            if(dfs(board,visited,word,idx+1,row,col,x-1,y)){
+        char ch = board[x][y];
+        board[x][y] = '*';
+        bool a,b,c,d;
+        if(canMove(x+1,y)){
+            a = dfs(x+1,y,board,word,idx+1);
+            if(a)
                 return true;
-            }
         }
-        if(x+1<row && !visited[x+1][y]){
-            if(dfs(board,visited,word,idx+1,row,col,x+1,y)){
+        if(canMove(x-1,y)){
+            b = dfs(x-1,y,board,word,idx+1);
+            if(b)
                 return true;
-            }
         }
-        if(y-1>=0 && !visited[x][y-1]){
-            if(dfs(board,visited,word,idx+1,row,col,x,y-1)){
+        if(canMove(x,y+1)){
+            c = dfs(x,y+1,board,word,idx+1);
+            if(c)
                 return true;
-            }
         }
-        if(y+1<col && !visited[x][y+1]){
-            if(dfs(board,visited,word,idx+1,row,col,x,y+1)){
+        if(canMove(x,y-1)){
+            d = dfs(x,y-1,board,word,idx+1);
+            if(d)
                 return true;
-            }
         }
-        visited[x][y] = false;
-        
+        board[x][y] = ch;
         return false;
     }
     bool exist(vector<vector<char>>& board, string word) {
-        int rows = board.size();
-        int col = board[0].size();
-        if(word.length()<=0){
-            return false;
-        }
-        vector<vector<bool>> visited(rows,vector<bool>(col,false));
-        for(int i=0;i<rows;i++){
-            for(int j=0;j<col;j++){
-                visited[i][j] = true;
-                if(dfs(board,visited,word,0,rows,col,i,j))
+        
+        m = board.size();
+        n = board[0].size();
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(word[0]==board[i][j] && dfs(i,j,board,word,0)){
                     return true;
-                visited[i][j] = false;
+                }
             }
         }
-        
         return false;
     }
 };
