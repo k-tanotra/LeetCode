@@ -1,31 +1,37 @@
 class Solution {
 public:
-    string longestPalindrome(string s) {
-        //two solution manechars  algo
-        
-        //dp solution
-        int n = s.size();
-        vector<vector<bool>> dp(n,vector<bool>(n,false));
-        for(int i=0;i<n;i++){
-            dp[0][i] = true;
+    void print(vector<vector<int>> arr){
+        for(int i=0;i<arr.size();i++){
+            for(int j=0;j<arr[0].size();j++){
+                cout<<arr[i][j]<<" ";
+            }
+            cout<<endl;
         }
-        
-        int size = 1;
-        int start = 0;
-        for(int i=1;i<n;i++){
-            for(int j=0;j<n-i;j++){
-                if(s[j]==s[j+i] &&  (i<2 || dp[i-2][j+1])){
-                    dp[i][j] = true;
-                    if(i+1>size){
-                        size = i+1;
-                        start = j;
-                        // break;
+        cout<<endl;
+    }
+    string longestPalindrome(string s) {
+        int n = s.length();
+        if(n==0){
+            return "";
+        }
+        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+        for(int i=1;i<=n;i++){
+            dp[i][1] = 1;
+        }
+        int start = 2;
+        int ans = 1;
+        int sIdx = 0;
+        for(int i=2;i<=n;i++,start++){
+            for(int j=start;j<=n;j++){
+                if(s[j-1]==s[j-i]){
+                    dp[j][i] = dp[j-1][i-2] || i==2 ? dp[j-1][i-2] + 2:0;
+                    if(dp[j][i]>ans){
+                        ans = dp[j][i];
+                        sIdx = j-i;
                     }
                 }
             }
         }
-        
-        string ans = s.substr(start,size);
-        return ans;
+        return s.substr(sIdx,ans);
     }
 };
