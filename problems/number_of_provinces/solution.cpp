@@ -1,59 +1,39 @@
 class Solution {
 public:
-    vector<int> dp;
-//     void dfs(vector<bool> &dp,int idx,vector<vector<int>>& isConnected){
-//         dp[idx] = true;
-//         for(int i=0;i<dp.size();i++){
-//             if(i!=idx && !dp[i] && isConnected[idx][i]){
-//                 dfs(dp,i,isConnected);
-//             }
-//         }
-//     }
-    int find_parent(int n){
-        if(n==dp[n])
-            return n;
-        
-        return find_parent(dp[n]);
+    void print(vector<int> arr){
+        for(int num:arr){
+            cout<<num<<" ";
+        }
+        cout<<endl;
     }
-    void uf(int i,int j){
-        int a = find_parent(i);
-        int b = find_parent(j);
-        
-        dp[b] = a;
+    int parent(vector<int> arr,int i){
+        while(arr[i]!=i){
+            i = arr[i];
+        }
+        return i;
     }
     int findCircleNum(vector<vector<int>>& isConnected) {
-//         int n = isConnected.size();
-//         vector<bool> dp(n,false);
-//         int count = 0;
-//         for(int i=0;i<n;i++){
-//            if(!dp[i]){
-//                dfs(dp,i,isConnected);
-//                count++;
-//            }
-//         }
-        
-//         return count;
-        
-        
-        //TRY 2 UNION FIND
         int n = isConnected.size();
+        vector<int> arr(n);
         for(int i=0;i<n;i++){
-            dp.push_back(i);
+            arr[i] = i;
         }
         
         for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                if(isConnected[i][j])
-                    uf(i,j);
+            for(int j=i+1;j<n;j++){
+                if(isConnected[i][j]){
+                    int x = parent(arr,j);
+                    int y = parent(arr,i);
+                    arr[x] = y;
+                }
             }
         }
-        int ans = 0;
+        int ans=0;
         for(int i=0;i<n;i++){
-            if(dp[i]==i){
+            if(i==arr[i]){
                 ans++;
             }
         }
-        
         return ans;
     }
 };
