@@ -10,65 +10,63 @@
  */
 class Solution {
 public:
-    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-        
-        ListNode* cur1 = l1;
-        ListNode* cur2 = l2;
-        ListNode* head=nullptr;
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+
+        ListNode* p1 = list1;
+        ListNode* p2 = list2;
+
         ListNode* ans = nullptr;
-        while(cur1 && cur2){
-            if(cur1->val<=cur2->val){
-                if(ans==nullptr){
-                    ans = cur1;
-                    head = cur1;
-                    cur1 = cur1->next;
+        ListNode* res = nullptr;
+
+        if(p1==nullptr){
+            return p2;
+        }
+        if(p2==nullptr){
+            return p1;
+        }
+
+        while(p1!=nullptr || p2!=nullptr){
+            if(p1!=nullptr && p2!=nullptr){
+                if(p1->val <= p2->val){
+                    if(ans==nullptr){
+                        ans = p1;
+                        res = ans;
+                    }
+                    else{
+                        ans->next = p1;
+                        ans = ans->next;
+                    }
+                    p1 = p1->next;
                 }
-                else{
-                    head->next = cur1;
-                    head = head->next;
-                    cur1 = cur1->next;
+                else if(p2->val < p1->val){
+                    if(ans==nullptr){
+                        ans = p2;
+                        res = ans;
+                    }
+                    else{
+                        ans->next = p2;
+                        ans = ans->next;
+                    }
+                    p2 = p2->next;
                 }
             }
-            else{
-                if(ans==nullptr){
-                    ans = cur2;
-                    head = cur2;
-                    cur2 = cur2->next;
+            else if(p1!=nullptr){
+                 while(p1!=nullptr){
+                    ans->next = p1;
+                    ans = ans->next;
+                    p1 = p1->next;
                 }
-                else{
-                    head->next = cur2;
-                    head = head->next;
-                    cur2 =cur2->next;
+            }
+            else if(p2!=nullptr){
+                 while(p2!=nullptr){
+                    ans->next = p2;
+                    ans = ans->next;
+                    p2 = p2->next;
                 }
             }
         }
-        
-        while(cur1){
-            if(ans==nullptr){
-                ans = cur1;
-                head = cur1;
-                cur1 = cur1->next;
-            }
-            else{
-                head->next = cur1;
-                head = head->next;
-                cur1 = cur1->next;
-            }
-        }
-        
-        while(cur2){
-            if(ans==nullptr){
-                ans = cur2;
-                head = cur2;
-                cur2  = cur2->next;
-            }
-            else{
-                head->next = cur2;
-                cur2 = cur2->next;
-                head = head->next;
-            }
-        }
-        
-        return ans;
+
+
+        return res;
     }
 };
