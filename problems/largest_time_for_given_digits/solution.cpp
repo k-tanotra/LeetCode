@@ -1,36 +1,38 @@
 class Solution {
 public:
+    bool isValid(int hour,int min){
+        if(hour<=23 && min<=59){
+            return true;
+        }
+        return false;
+    }
     string largestTimeFromDigits(vector<int>& arr) {
-        string ans = "";
-        int hoursMx = -1;
-        int minMx = -1;
         sort(arr.begin(),arr.end());
+        int mxHour = -1;
+        int mxMin = -1;
         do{
-            int hours = arr[0]*10 + arr[1];
-            int min = arr[2]*10 + arr[3];
-            cout<<hours<<" "<<min<<endl;
-            if(hours>=0 && hours<=23 && min>=0 && min<=59){
-                 if(hours>hoursMx){
-                    hoursMx = hours;
-                    minMx  = min;
-                    ans = "";
-                    ans += to_string(arr[0]);
-                    ans += to_string(arr[1]);
-                    ans+= ":";
-                    ans += to_string(arr[2]);
-                    ans += to_string(arr[3]);
-                 }
-                 else if(hours==hoursMx && min>minMx){
-                    minMx  = min;
-                    ans = "";
-                    ans += to_string(arr[0]);
-                    ans += to_string(arr[1]);
-                    ans+= ":";
-                    ans += to_string(arr[2]);
-                    ans += to_string(arr[3]);
-                 }
+            if(isValid(arr[0]*10+arr[1],arr[2]*10+arr[3])){
+                if(arr[0]*10+arr[1]>mxHour){
+                    mxHour = arr[0]*10+arr[1];
+                    mxMin = arr[2]*10+arr[3];
+                }
+                else if(arr[0]*10+arr[1]==mxHour && arr[2]*10+arr[3]>mxMin){
+                    mxMin = arr[2]*10+arr[3];
+                }
             }
-        }while(next_permutation(arr.begin(),arr.end()));
-        return ans;
+        }while(next_permutation(arr.begin(), arr.end()));
+
+        if(mxHour==-1)
+            return "";
+        
+        string h = to_string(mxHour);
+        string m = to_string(mxMin);
+        if(h.size()==1){
+            h = "0" + h;
+        }
+        if(m.size()==1){
+            m = "0" + m;
+        }
+        return h + ":" + m;
     }
 };
