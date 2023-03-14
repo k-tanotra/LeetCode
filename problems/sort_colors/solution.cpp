@@ -1,27 +1,31 @@
 class Solution {
 public:
-    void print(vector<int> arr){
-        for(int n:arr){
-            cout<<n<<" ";
-        }
-        cout<<endl;
-    }
     void sortColors(vector<int>& nums) {
         int start = 0;
         int end = nums.size()-1;
-        int mid = 0;
-        while(mid<=end){
-            if(nums[mid]==0){
-                swap(nums[mid],nums[start]);
-                start++; mid++;
-            }
-            else if(nums[mid]==2){
-                swap(nums[mid],nums[end]);
-                end--;
-            }
-            else{
-                mid++;
-            }
+        int zeros=0,ones=0,twos = 0;
+        for(int i=0;i<nums.size();i++){
+           switch(nums[i]){
+               case 0:
+                    zeros+=1;
+                    break;
+               case 1:
+                    ones+=1;
+                    break;
+               case 2:
+                    twos+=1;
+                    break;
+           }
+        }
+        //cout<<ones<<" "<<twos<<" "<<zeros<<endl;
+        for(int i=0;i<zeros;i++){
+            nums[i] = 0;
+        }
+        for(int i=zeros;i<zeros+ones;i++){
+            nums[i] = 1;
+        }
+        for(int i=zeros+ones;i<zeros+ones+twos;i++){
+            nums[i] = 2;
         }
     }
 };
