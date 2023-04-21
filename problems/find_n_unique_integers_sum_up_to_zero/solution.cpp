@@ -1,19 +1,14 @@
 class Solution {
 public:
     vector<int> sumZero(int n) {
-        vector<int> ans;
+        vector<int> res;
         if(n%2!=0){
-            ans.push_back(0);
-            n--;
+            res.push_back(0);
         }
-        n=n/2;
-        int start  = 1;
-        while(n>0){
-            ans.push_back(start);
-            ans.push_back(-1*start);
-            start++;
-            n--;
+        for(int i=0;i<n/2;i++){
+            res.push_back(i+1);
+            res.push_back(-1*(i+1));
         }
-        return ans;
+        return res;
     }
 };
