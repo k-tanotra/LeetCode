@@ -3,27 +3,26 @@ public:
     int trap(vector<int>& height) {
         int start = 0;
         int end = height.size()-1;
-        int mxLeft = INT_MIN;
-        int mxRight = INT_MIN;
-        int ans = 0;
-        while(start<end){
-            mxLeft = max(height[start],mxLeft);
-            mxRight = max(height[end],mxRight);
-            if(height[start]<min(mxLeft,mxRight)){
-                ans+= min(mxLeft,mxRight) - height[start];
+        int left = -1;
+        int right = -1;
+        int total = 0;
+        while(start<=end){
+            left = max(left,height[start]);
+            right = max(right,height[end]);
+            int mn = min(left,right);
+            if(height[start]<mn){
+                total += mn - height[start];
             }
-            else if(height[end]<min(mxLeft,mxRight)){
-                ans += min(mxLeft,mxRight) - height[end];
+            if(height[end]<mn && start!=end){
+                total += mn - height[end];
             }
-            
-            if(height[start]<=height[end]){
+            if(left<=right){
                 start++;
             }
-            else{
+            else if(right<left){
                 end--;
             }
         }
-        
-        return ans;
+        return total;
     }
 };
