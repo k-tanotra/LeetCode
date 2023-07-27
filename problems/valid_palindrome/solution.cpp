@@ -1,42 +1,35 @@
 class Solution {
 public:
-    int isAlphaNum(char c){
-        if(c>='a' && c<='z'){
-            return 1;
+    bool isAlphaNumeric(char c){
+        if((c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9')){
+            return true;
         }
-        if(c>='A' && c<='Z'){
-            return 2;
-        }
-        if(c>='0' && c<='9'){
-            return 3;
-        }
-        return 0;
+        return false;
     }
     bool isPalindrome(string s) {
         int start = 0;
-        int end = s.length()-1;
+        int end = s.size()-1;
         while(start<=end){
-            int x = isAlphaNum(s[start]);
-            int y = isAlphaNum(s[end]);
-            if(x && y){
-                if(x==2)
-                    s[start] = 'a' + (s[start]-'A');
-                if(y==2)
-                    s[end] = 'a' + (s[end]-'A');
-                
-                if(s[start]!=s[end])
-                    return false;
+            if(!isAlphaNumeric(s[start])){
                 start++;
+                continue;
+            }
+            if(!isAlphaNumeric(s[end])){
                 end--;
+                continue;
             }
-            else if(!x){
-                start++;
+            if(s[start]>='A' && s[start]<='Z'){
+                s[start] = s[start] - 'A' + 'a';
             }
-            else if(!y){
-                end--;
+            if(s[end]>='A' && s[end]<='Z'){
+                s[end] = s[end] - 'A' + 'a';
             }
+            if(s[start]!=s[end]){
+                return false;
+            }
+            start++;
+            end--;
         }
-        
         return true;
     }
 };
