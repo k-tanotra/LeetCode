@@ -1,54 +1,49 @@
 class Solution {
 public:
+    void print(vector<int> &nums){
+        for(int i=0;i<nums.size();i++){ 
+            cout<<nums[i]<<" ";
+        }
+        cout<<"\n";
+    }
+    void print(vector<vector<int>> &nums){
+        for(int i=0;i<nums.size();i++){
+            for(int j=0;j<nums[i].size();j++){ 
+                cout<<nums[i][j]<<" ";
+            }
+            cout<<"\n";
+        }
+        cout<<"\n";
+    }
     vector<vector<int>> threeSum(vector<int>& nums) {
         sort(nums.begin(),nums.end());
-        int len = nums.size();
-        vector<vector<int> > ans;
-        map<vector<int>,bool> m;
-        for(int i=0;i<len;i++){
-            int target = -1*nums[i];
+        print(nums);
+        int n = nums.size();
+        vector<vector<int>> res;
+        for(int i=n-1;i>=2;i--){
             int start = 0;
-            int end = len-1;
+            int end = i-1;
+            int target = nums[i] * -1;
             while(start<end){
-                if(start==i){
-                    start++;
-                    continue;
-                }
-                else if(end==i){
-                    end--;
-                    continue;
-                }
-                
-                int val = nums[start] + nums[end];
-                if(val<target){
+                int sum = nums[start] + nums[end];
+                if(sum<target){
                     start++;
                 }
-                else if(val>target){
+                else if(sum>target){
                     end--;
                 }
-                else if(val==target){
-                    vector<int> a = {-1*target,nums[start],nums[end]};
-                    sort(a.begin(),a.end());
-                    if(m.find(a)==m.end()){
-                         m.insert({a,true});
-                         ans.push_back(a);
-                    }
-                    if(start<end && nums[start]==nums[start+1]){
-                        while(start<end  && nums[start]==nums[start+1]){
-                            start++;
-                        }
-                    }
-                    else{
+                else{
+                    res.push_back({nums[start],nums[end],nums[i]});
+                    while(start<end && nums[start]==nums[start+1]){
                         start++;
                     }
-                    if(start<end  && nums[end]==nums[end-1]){
-                            while(start<end  && nums[end]==nums[end-1]){
-                            end--;
-                        }
-                    }
+                    start++;
                 }
             }
+            while(i>=2 && nums[i]==nums[i-1]){
+                i--;
+            }
         }
-        return ans;
+        return res;
     }
 };
