@@ -1,57 +1,64 @@
 class Solution {
 public:
-    bool checksubset(map<char,int> &a, map<char,int> &b){
-        if(a.size()!=b.size()){
-            return false;
+    int getIdx(char c){
+        if(c>='a' && c<='z'){
+            return c-'a';
         }
-        auto itr2 = a.begin();
-        for(auto itr=b.begin();itr!=b.end();itr++){
-            if(itr2->first!=itr->first){
+        return c-'A'+26;
+    }
+    bool check(vector<int> &f,vector<int> &c){
+        for(int i=0;i<f.size();i++){
+            if(c[i]<f[i]){
                 return false;
             }
-            else if(itr2->second>itr->second){
-                return false;
-            }
-            itr2++;
         }
         return true;
     }
     string minWindow(string s, string t) {
-        map<char,int> m;
-        map<char,int> tm;
-        
-        int len1 = s.length();
-        int len2 = t.length();
-        for(int i=0;i<len2;i++){
-            m[t[i]]++;
+        vector<int> freq(52,0);
+        vector<int> com(52,0);
+        for(int i=0;i<t.size();i++){
+            freq[getIdx(t[i])]++;
         }
-        
-        int st = 0;
+        int start = 0;
         int end = 0;
-        int sz = INT_MAX;
-        string ans = "";
+        int mnLen = INT_MAX;
+        int startIdx;
         int prev = -1;
-        
-        while(end<len1){
-            if(m.find(s[end])!=m.end() && (prev!=end)){
-                 tm[s[end]]++;
+        while(start<s.size() && end<s.size()){
+            //cout<<"*******"<<endl;
+            //cout<<start<<" "<<s[start]<<endl;
+            //cout<<end<<" "<<s[end]<<endl;
+            if(freq[getIdx(s[end])]>0 && prev!=end){
+                com[getIdx(s[end])]++;
+                prev = end;
             }
-            prev = end;
-            if(!checksubset(m,tm)){
+            if(!check(freq,com)){
                 end++;
             }
             else{
-                if(end-st+1<sz){
-                    sz = end-st+1;
-                    ans = s.substr(st,sz);
+                //cout<<"FOUND"<<endl;
+                if(end-start+1<mnLen){
+                    mnLen = min(mnLen,end-start+1);
+                    startIdx = start;
                 }
-                if(tm.find(s[st])!=tm.end()){
-                    tm[s[st]]--;
+                if(com[getIdx(s[start])]>0){
+                    //cout<<com[getIdx(s[start])]<<endl;
+                    //cout<<s[start]<<endl;
+                    com[getIdx(s[start])]--;
+                    //cout<<"^^^"<<endl;
+                    //cout<<com[getIdx(s[start])]<<endl;
+                    //cout<<s[start]<<endl;
                 }
-                st++;
+                start++;
+                if(start>end){
+                    end = start;
+                }
             }
         }
-        
-        return ans;
+
+        if(mnLen==INT_MAX)
+            return "";
+        return s.substr(startIdx,mnLen);
     }
 };
