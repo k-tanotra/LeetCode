@@ -1,27 +1,20 @@
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        vector<vector<string>> ans;
-        map<vector<int>,vector<string>> m;
+        unordered_map<string,int> m;
+        vector<vector<string>> v;
         for(int i=0;i<strs.size();i++){
-            vector<int> dp(26,0);
-            for(int j=0;j<strs[i].length();j++){
-                dp[strs[i][j]-'a']++;
-            }
-            if(m.find(dp)==m.end()){
-                vector<string> x;
-                x.push_back(strs[i]);
-                m.insert({dp,x});
+            string x = strs[i];
+            sort(x.begin(),x.end());
+            if(m.find(x)==m.end()){
+                int idx = v.size();
+                v.push_back({strs[i]});
+                m[x] = idx;
             }
             else{
-                m[dp].push_back(strs[i]);
+                v[m[x]].push_back(strs[i]);
             }
         }
-        
-        for(auto itr=m.begin();itr!=m.end();itr++){
-            ans.push_back(itr->second);
-        }
-        
-        return ans;
+        return v;
     }
 };
