@@ -1,29 +1,32 @@
 class Solution {
 public:
     int minDominoRotations(vector<int>& tops, vector<int>& bottoms) {
-        int n = tops.size();
-        vector<int> tm(6,0);
-        vector<int> bm(6,0);
-        vector<int> sim(6,0);
-        
-        for(int i=0;i<n;i++){
-            if(tops[i]!=bottoms[i]){
-                tm[tops[i]-1]++;
-                bm[bottoms[i]-1]++;
-            }
-            else{
-                sim[tops[i]-1]++;
+        unordered_map<int,int> m;
+        for(int i=0;i<tops.size();i++){
+            m[tops[i]]++;
+            m[bottoms[i]]++;
+        }
+        for(auto itr=m.begin();itr!=m.end();itr++){
+            if(itr->second>=tops.size()){
+                int c = 0;
+                int x = 0;
+                int w = true;
+                for(int i=0;i<tops.size();i++){
+                    if(tops[i]!=itr->first && bottoms[i]!=itr->first){
+                        w = false;
+                        break;
+                    }
+                    if(tops[i]==itr->first && bottoms[i]!=itr->first)
+                        c++;
+                    if(bottoms[i]==itr->first && tops[i]!=itr->first)
+                        x++;
+                }
+                if(!w){
+                    continue;
+                }
+                return min(x,c);
             }
         }
-        int moves = INT_MAX;
-        for(int i=0;i<6;i++){
-            if(tm[i]+bm[i]+sim[i]==n){
-                moves = min(moves,min(tm[i],bm[i]));
-            }
-        }
-        if(moves==INT_MAX){
-            return -1;
-        }
-        return moves;
+        return -1;
     }
 };
