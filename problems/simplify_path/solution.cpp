@@ -1,55 +1,46 @@
 class Solution {
 public:
-    vector<string> split(string s){
-        string temp = "";
+    vector<string> split(string path){
         vector<string> ans;
-        for(int i=0;i<s.length();i++){
-            if(s[i]=='/'){
-                if(temp!="")
-                    ans.push_back(temp);
-                temp="";
+        string temp = "";
+        for(int i=0;i<path.size();i++){
+            if(path[i]=='/' && temp.size()>0){
+                ans.push_back(temp);
+                temp = "";
             }
-            else{
-                temp +=s[i];
+            else if(path[i]!='/'){
+                temp +=path[i];
             }
         }
-        if(temp!=""){
+        if(temp.size()>0){
             ans.push_back(temp);
         }
         return ans;
     }
-    void print(vector<string> r){
-        for(int i=0;i<r.size();i++){
-            cout<<r[i]<<" ";
-        }
-        cout<<endl;
-    }
     string simplifyPath(string path) {
-        vector<string> res = split(path);
-        
-       // print(res);
-        stack<string> st;
-        for(int i=0;i<res.size();i++){
-            if(res[i]=="."){
+        vector<string> s = split(path);
+        vector<string> t = {""};
+        for(int i=0;i<s.size();i++){
+            if(s[i]=="."){
                 continue;
             }
-            else if(res[i]==".."){
-                if(!st.empty()){
-                    st.pop();
-                }
+            else if(s[i]==".."){
+                if(t.size()>=1)
+                    t.pop_back();
             }
             else{
-                st.push(res[i]);
+                t.push_back(s[i]);
             }
-            
         }
         string ans = "";
-        while(!st.empty()){
-            ans = "/" + st.top() + ans;
-            st.pop();
+        for(int i=0;i<t.size();i++){
+            if(i!=t.size()-1)
+                ans+= t[i] + "/";
+            else
+                ans+= t[i];
         }
-        if(ans=="")
-            return "/";
+        if(ans[0]!='/')
+            ans = "/" + ans;
         return ans;
     }
 };
